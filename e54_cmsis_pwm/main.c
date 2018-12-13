@@ -21,6 +21,11 @@
     SOFTWARE.
  */
 
+/*
+ *   https://github.com/dxstp/same54_init
+ * 
+ */
+
 #include <sam.h>
 #include <stdio.h>
 #include "my_init/oscctrl.h"
@@ -76,10 +81,10 @@ int main(void)
 	// init the PWM module to generate two 16-bit PWMs
 	init_pwm();
 	printf("PWM initialized.\r\n");
-	
+
 
 	/* Replace with your application code */
 	while (1) {
 		__NOP();
+        }
 	}
-}
