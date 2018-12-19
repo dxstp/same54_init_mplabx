@@ -1,29 +1,31 @@
-/*
-    (c) 2018 Microchip Technology Inc. and its subsidiaries. 
-    
-    Subject to your compliance with these terms, you may use Microchip software and any 
-    derivatives exclusively with Microchip products. It is your responsibility to comply with third party 
-    license terms applicable to your use of third party software (including open source software) that 
-    may accompany Microchip software.
-    
-    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
-    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY 
-    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS 
-    FOR A PARTICULAR PURPOSE.
-    
-    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
-    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP 
-    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO 
-    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL 
-    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
-    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
-    SOFTWARE.
- */
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright (c) 2013-2014 released Microchip Technology Inc.  All rights reserved.
 
-/*
+Microchip licenses to you the right to use, modify, copy and distribute
+Software only when embedded on a Microchip microcontroller or digital signal
+controller that is integrated into your product or third party product
+(pursuant to the sublicense terms in the accompanying license agreement).
+
+You should refer to the license agreement accompanying this Software for
+additional information regarding your rights and obligations.
+
+SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
+MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
+CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
+OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
+INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
+CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
+SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
+(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+ *******************************************************************************/
+// DOM-IGNORE-END
+
+
+/**
  *   https://github.com/dxstp/same54_init
- * 
  */
 
 #include <sam.h>
@@ -35,56 +37,30 @@
 #include "my_init/pwm.h"
 #include "my_init/uart.h"
 
+/** 
+ * this examples is designed for the ATSAM E54 Xplained Pro board.
+ */
 
-// this examples is designed for the ATSAM E54 Xplained Pro board.
-int main(void)
-{
-	// if everything is left on default, the controller will start with the
-	// internal 48 MHz FDPLL0 oscillator, routed to GLCK0.
-	// GLCK0 will provide the clock for MCLK, which clocks the CPU, the bus
-	// and the modules connected to the bus.
-	// However, some peripherals need a separate asynchronous clock and
-	// some interfaces of modules must first be unmasked to be clocked by
-	// the synchronous bus clock.
-	
-	// init an external crystal oscillator to 12 MHz
-	init_oscctrl();
-	
-	// connect GCLK0 to DPLL0 (120 MHz)
-	// connect GCLK1 to DPLL1 (200 MHz), divide by 200 => 1 MHz for Pin Output (to check clock)
-	// connect GCLK2 to DPLL1 (200 MHz), divide by 2 => 100 MHz for PWM
-	// connect GCLK3 to XOSC1 (12 MHz) => 12 MHz for SERCOM core
-	// connect GCLK4 to XOSC32K (32.768 kHz) => for RTC and SERCOM slow
-	init_gclk();
-	
-	// init the UART module to 115200 baud, 8N1
-	init_uart();
-	
-	// init the GPIO module to output GLCK1
-	// PWM from TC7, WO0 and WO1
-	// RX = PB24, TX = PB25 (for Xplained Board)
-	init_gpio();
-	
-	printf("\r\n-- SAME54 Xplained Pro boot example --\r\n");
+int main(void) {
+
+    OSCCTRL_Init();
+    GCLK_Init();
+    UART2_Init();
+    GPIO_Init();
+
+    printf("\r\n-- SAME54 Xplained Pro boot example --\r\n");
     printf("Build "__TIME__" at "__DATE__"\r\n");
-	printf("OSCCTRL initialized.\r\n");
-	printf("GCLK initialized.\r\n");
-	printf("GPIO initialized.\r\n");
-	
-	// init DPLL0 and DPLL1
-	// clock input is XOSC1, which will by divided by 4 beforehand
-	// maximum clock input frequency is 3 MHz
-	init_dpll();
-	printf("DPLL initialized.\r\n");
+    printf("OSCCTRL initialized.\r\n");
+    printf("GCLK initialized.\r\n");
+    printf("GPIO initialized.\r\n");
 
-	
-	// init the PWM module to generate two 16-bit PWMs
-	init_pwm();
-	printf("PWM initialized.\r\n");
+    DPLL_Init();
+    printf("DPLL initialized.\r\n");
 
+    PWM_Init();
+    printf("PWM initialized.\r\n");
 
-	/* Replace with your application code */
-	while (1) {
-		__NOP();
-        }
-	}
+    while(1) {
+        __NOP();
+    }
+}
