@@ -22,37 +22,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
 // DOM-IGNORE-END
-#include <sam.h>
-#include "pwm.h"
 
-/** 
- * init the PWM module to generate two 16-bit PWMs
- */
-void PWM_Init(void) {
+#ifndef PRINT_H
+#define	PRINT_H
 
-    // unmask TC7 in MCLK to enable clock to user interface
-    MCLK->APBDMASK.reg |= MCLK_APBDMASK_TC7;
+void PRINT_Init(void);
 
-    // connect GLCK with TC7 module
-    GCLK->PCHCTRL[TC7_GCLK_ID].reg = GCLK_PCHCTRL_GEN_GCLK2 
-            | (1 << GCLK_PCHCTRL_CHEN_Pos);
+#endif	/* PRINT_H */
 
-    // do a software reset of the module (write-synchronized)
-    TC7->COUNT16.CTRLA.reg = TC_CTRLA_SWRST;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_SWRST);
-
-    // set the modes
-    TC7->COUNT16.CTRLA.reg = TC_CTRLA_MODE(TC_CTRLA_MODE_COUNT16_Val);
-    TC7->COUNT16.WAVE.reg = TC_WAVE_WAVEGEN_NPWM_Val;
-
-    // set the duty cycles for each output
-    TC7->COUNT16.CC[0].reg = 32767;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_CC0);
-    TC7->COUNT16.CC[1].reg = 10000;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_CC1);
-
-    // enable the PWM module
-    TC7->COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_ENABLE);
-
-}

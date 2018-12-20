@@ -36,18 +36,21 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "my_init/gpio.h"
 #include "my_init/pwm.h"
 #include "my_init/uart.h"
+#include "print.h"
 
 /** 
  * this examples is designed for the ATSAM E54 Xplained Pro board.
  */
 
 int main(void) {
-
+    
     OSCCTRL_Init();
-    GCLK_Init();
+    GCLK_Init();    
     UART2_Init();
     GPIO_Init();
-
+    
+    PRINT_Init();
+    
     printf("\r\n-- SAME54 Xplained Pro boot example --\r\n");
     printf("Build "__TIME__" at "__DATE__"\r\n");
     printf("OSCCTRL initialized.\r\n");
@@ -59,7 +62,7 @@ int main(void) {
 
     PWM_Init();
     printf("PWM initialized.\r\n");
-
+    
     while(1) {
         __NOP();
     }

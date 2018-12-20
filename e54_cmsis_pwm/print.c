@@ -22,37 +22,65 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
 // DOM-IGNORE-END
-#include <sam.h>
-#include "pwm.h"
 
-/** 
- * init the PWM module to generate two 16-bit PWMs
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "print.h"
+#include "my_init/uart.h"
+
+
+UART2_DATA *pUart;
+
+/**
+ * callback for printf to redirect the stdio output 
  */
-void PWM_Init(void) {
 
-    // unmask TC7 in MCLK to enable clock to user interface
-    MCLK->APBDMASK.reg |= MCLK_APBDMASK_TC7;
+void PRINT_Init(void) {
 
-    // connect GLCK with TC7 module
-    GCLK->PCHCTRL[TC7_GCLK_ID].reg = GCLK_PCHCTRL_GEN_GCLK2 
-            | (1 << GCLK_PCHCTRL_CHEN_Pos);
+    pUart = UART2_GetReference();
 
-    // do a software reset of the module (write-synchronized)
-    TC7->COUNT16.CTRLA.reg = TC_CTRLA_SWRST;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_SWRST);
-
-    // set the modes
-    TC7->COUNT16.CTRLA.reg = TC_CTRLA_MODE(TC_CTRLA_MODE_COUNT16_Val);
-    TC7->COUNT16.WAVE.reg = TC_WAVE_WAVEGEN_NPWM_Val;
-
-    // set the duty cycles for each output
-    TC7->COUNT16.CC[0].reg = 32767;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_CC0);
-    TC7->COUNT16.CC[1].reg = 10000;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_CC1);
-
-    // enable the PWM module
-    TC7->COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
-    while(TC7->COUNT16.SYNCBUSY.reg & TC_SYNCBUSY_ENABLE);
-
+    /* set STDIO to unbuffered */
+    setbuf(stdout, NULL);
+    setbuf(stdin, NULL);
+    
 }
+
+int _read(int file, char *ptr, int len) {
+    int length = 0;
+
+    if (file != 0) {
+        return -1;
+    }
+
+    pUart->pRxBuffer = ptr;
+    pUart->RxLength = len;
+    UART2_read();
+    length = pUart->RxOffset;
+    
+    if (length < 0) {
+        return -1;
+    }
+
+    return length;
+}
+
+int _write(int file, char *ptr, int len) {
+    int length = 0;
+
+    if ((file != 1) && (file != 2) && (file != 3)) {
+        return -1;
+    }
+
+    pUart->pTxBuffer = ptr;
+    pUart->TxLength = len;
+    UART2_write();
+    length = pUart->TxOffset;
+    
+    if (length < 0) {
+        return -1;
+    }
+
+    return length;
+}
+

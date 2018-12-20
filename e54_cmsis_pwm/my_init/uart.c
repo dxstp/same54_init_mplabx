@@ -23,7 +23,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
 // DOM-IGNORE-END
 #include <sam.h>
-#include <stdio.h>
 #include "uart.h"
 
 UART2_DATA uart2;
@@ -67,83 +66,32 @@ void UART2_Init(void) {
     SERCOM2->USART.CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
     while(SERCOM2->USART.SYNCBUSY.reg & SERCOM_USART_SYNCBUSY_ENABLE);
 
-    // set STDIO to unbuffered
-    setbuf(stdout, NULL);
-    setbuf(stdin, NULL);
 }
 
-/*
- *  in order to use printf, a couple of system calls have to be defined
- * 
- */
 
-int32_t UART2_write_(void) {
+void UART2_write(void) {
     uint32_t offset = 0;
 
     while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE));
 
     do {
-        SERCOM2->USART.DATA.reg = uart2.pBuffer[offset];
+        SERCOM2->USART.DATA.reg = uart2.pTxBuffer[offset];
         while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE));
-    }while(++offset < uart2.n);
+    }while(++offset < uart2.TxLength);
 
     while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_TXC));
 
-    return (int32_t) offset;
+    uart2.TxOffset = offset;
 }
 
-int32_t UART2_write(const uint8_t * const buf, const uint16_t length) {
-    uint32_t offset = 0;
-
-    while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE));
-
-    do {
-        SERCOM2->USART.DATA.reg = buf[offset];
-        while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE));
-    }while(++offset < length);
-
-    while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_TXC));
-
-    return (int32_t) offset;
-}
-
-int32_t UART2_read(uint8_t * const buf, const uint16_t length) {
+void UART2_read(void) {
     uint32_t offset = 0;
 
     do {
         while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_RXC));
-        buf[offset] = SERCOM2->USART.DATA.reg;
-    }while(++offset < length);
+        uart2.pRxBuffer[offset] = SERCOM2->USART.DATA.reg;
+    }while(++offset < uart2.RxLength);
 
-    return (int32_t) offset;
+    uart2.RxOffset = offset;
 }
 
-int __attribute__((weak)) _read(int file, char *ptr, int len) {
-    int n = 0;
-
-    if (file != 0) {
-        return -1;
-    }
-
-    n = UART2_read((uint8_t *) ptr, len);
-    if (n < 0) {
-        return -1;
-    }
-
-    return n;
-}
-
-int __attribute__((weak)) _write(int file, char *ptr, int len) {
-    int n = 0;
-
-    if ((file != 1) && (file != 2) && (file != 3)) {
-        return -1;
-    }
-
-    n = UART2_write((const uint8_t *) ptr, len);
-    if (n < 0) {
-        return -1;
-    }
-
-    return n;
-}

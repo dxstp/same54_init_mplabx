@@ -28,17 +28,22 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define UART_H_
 
 #define CONF_SERCOM_2_USART_BAUD_RATE 115200
-#define CONF_SERCOM_2_USART_BAUD_RATE_REGISTER_VAL (65536 - ((65536 * 16.0f * (CONF_SERCOM_2_USART_BAUD_RATE)) / 12000000))
+
+#define CONF_SERCOM_2_USART_BAUD_RATE_REGISTER_VAL \
+    (65536 - ((65536 * 16.0f * (CONF_SERCOM_2_USART_BAUD_RATE)) / 12000000))
 
 typedef struct {
-    uint8_t *pBuffer;
-    uint32_t n;
-}UART2_DATA;
+    char *pTxBuffer;
+    uint32_t TxLength;
+    uint32_t TxOffset;
+    char *pRxBuffer;
+    uint32_t RxLength;
+    uint32_t RxOffset;
+} UART2_DATA;
 
 UART2_DATA *UART2_GetReference(void);
 void UART2_Init(void);
-
-int32_t UART2_read(uint8_t * const buf, const uint16_t length);
-int32_t UART2_write(const uint8_t * const buf, const uint16_t length);
+void UART2_read(void);
+void UART2_write(void);
 
 #endif /* UART_H_ */

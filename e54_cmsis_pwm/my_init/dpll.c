@@ -53,8 +53,10 @@ void DPLL_Init(void) {
 
     // wait for PLL to lock
     while(!(
-            ((OSCCTRL->Dpll[0].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_LOCK) >> OSCCTRL_DPLLSTATUS_LOCK_Pos)
-            || ((OSCCTRL->Dpll[0].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_CLKRDY) >> OSCCTRL_DPLLSTATUS_CLKRDY_Pos)
+            ((OSCCTRL->Dpll[0].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_LOCK) 
+            >> OSCCTRL_DPLLSTATUS_LOCK_Pos)
+            || ((OSCCTRL->Dpll[0].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_CLKRDY) 
+            >> OSCCTRL_DPLLSTATUS_CLKRDY_Pos)
             ));
 
 
@@ -76,7 +78,9 @@ void DPLL_Init(void) {
 
     // wait for PLL to lock
     while(!(
-            ((OSCCTRL->Dpll[1].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_LOCK) >> OSCCTRL_DPLLSTATUS_LOCK_Pos)
-            || ((OSCCTRL->Dpll[1].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_CLKRDY) >> OSCCTRL_DPLLSTATUS_CLKRDY_Pos)
+            ((OSCCTRL->Dpll[1].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_LOCK) 
+            >> OSCCTRL_DPLLSTATUS_LOCK_Pos)
+            || ((OSCCTRL->Dpll[1].DPLLSTATUS.reg & OSCCTRL_DPLLSTATUS_CLKRDY) 
+            >> OSCCTRL_DPLLSTATUS_CLKRDY_Pos)
             ));
 }
