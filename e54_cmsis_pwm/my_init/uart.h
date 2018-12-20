@@ -35,5 +35,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void UART2_Init(void);
 int32_t UART2_read(char *ptr, int32_t length);
 int32_t UART2_write(char *ptr, int32_t length);
+int32_t UART2_IsDataAvailable(void);
 
 #endif /* UART_H_ */

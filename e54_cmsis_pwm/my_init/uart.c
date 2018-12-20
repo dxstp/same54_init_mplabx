@@ -88,3 +88,7 @@ int32_t UART2_read(char *ptr, int32_t length) {
     return offset;
 }
 
+int32_t UART2_IsDataAvailable(void)
+{
+    return (SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_RXC) ? 1 : 0;
+}

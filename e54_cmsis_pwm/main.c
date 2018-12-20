@@ -1,7 +1,7 @@
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 Copyright (c) 2013-2014 released Microchip Technology Inc.  All rights reserved.
-
+ 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
 controller that is integrated into your product or third party product
@@ -43,14 +43,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  */
 
 int main(void) {
-    
+
     OSCCTRL_Init();
-    GCLK_Init();    
+    GCLK_Init();
     UART2_Init();
     GPIO_Init();
-    
+
     PRINT_Init();
-    
+
     printf("\r\n-- SAME54 Xplained Pro boot example --\r\n");
     printf("Build "__TIME__" at "__DATE__"\r\n");
     printf("Target device ATSAME54P20A\n\r");
@@ -63,8 +63,10 @@ int main(void) {
 
     PWM_Init();
     printf("PWM initialized.\r\n");
-    
+
     while(1) {
-        __NOP();
+        if (UART2_IsDataAvailable()) {
+            printf("%c", getchar());
+        }
     }
 }
