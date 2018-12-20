@@ -41,7 +41,6 @@
         <itemPath>../print.c</itemPath>
       </logicalFolder>
       <itemPath>../main.c</itemPath>
-      <itemPath>../utils_syscalls.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

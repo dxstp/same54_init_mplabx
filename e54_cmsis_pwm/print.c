@@ -25,9 +25,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "print.h"
 #include "my_init/uart.h"
+
+extern int errno;
+extern int _end;
 
 /**
  * callback for printf to redirect the stdio output 
@@ -72,4 +78,89 @@ int _write(int file, char *ptr, int len) {
 
     return length;
 }
+
+/**
+ * \brief Replacement of C library of _sbrk
+ */
+caddr_t _sbrk(int incr) {
+    static unsigned char *heap = NULL;
+    unsigned char * prev_heap;
+
+    if (heap == NULL) {
+        heap = (unsigned char *) &_end;
+    }
+    prev_heap = heap;
+
+    heap += incr;
+
+    return (caddr_t) prev_heap;
+}
+
+/**
+ * \brief Replacement of C library of link
+ */
+int link(char *old, char *_new) {
+    (void) old, (void) _new;
+    return -1;
+}
+
+/**
+ * \brief Replacement of C library of _close
+ */
+int _close(int file) {
+    (void) file;
+    return -1;
+}
+
+/**
+ * \brief Replacement of C library of _fstat
+ */
+int _fstat(int file, struct stat *st) {
+    (void) file;
+    st->st_mode = S_IFCHR;
+
+    return 0;
+}
+
+/**
+ * \brief Replacement of C library of _isatty
+ */
+int _isatty(int file) {
+    (void) file;
+    return 1;
+}
+
+/**
+ * \brief Replacement of C library of _lseek
+ */
+int _lseek(int file, int ptr, int dir) {
+    (void) file, (void) ptr, (void) dir;
+    return 0;
+}
+
+/**
+ * \brief Replacement of C library of _exit
+ */
+void _exit(int status) {
+    printf("Exiting with status %d.\n", status);
+
+    for (;;)
+        ;
+}
+
+/**
+ * \brief Replacement of C library of _kill
+ */
+void _kill(int pid, int sig) {
+    (void) pid, (void) sig;
+    return;
+}
+
+/**
+ * \brief Replacement of C library of _getpid
+ */
+int _getpid(void) {
+    return -1;
+}
+
 
