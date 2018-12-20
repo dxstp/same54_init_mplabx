@@ -25,12 +25,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <sam.h>
 #include "uart.h"
 
-UART2_DATA uart2;
-
-UART2_DATA *UART2_GetReference(void) {
-    return &uart2;
-}
-
 /** 
  * init the UART module to 115200 baud, 8N1
  */
@@ -68,30 +62,29 @@ void UART2_Init(void) {
 
 }
 
-
-void UART2_write(void) {
+int32_t UART2_write(char *ptr, int32_t length) {
     uint32_t offset = 0;
 
     while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE));
 
     do {
-        SERCOM2->USART.DATA.reg = uart2.pTxBuffer[offset];
+        SERCOM2->USART.DATA.reg = ptr[offset];
         while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE));
-    }while(++offset < uart2.TxLength);
+    }while(++offset < length);
 
     while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_TXC));
 
-    uart2.TxOffset = offset;
+    return offset;
 }
 
-void UART2_read(void) {
+int32_t UART2_read(char *ptr, int32_t length) {
     uint32_t offset = 0;
 
     do {
         while(!(SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_RXC));
-        uart2.pRxBuffer[offset] = SERCOM2->USART.DATA.reg;
-    }while(++offset < uart2.RxLength);
+        ptr[offset] = SERCOM2->USART.DATA.reg;
+    }while(++offset < length);
 
-    uart2.RxOffset = offset;
+    return offset;
 }
 

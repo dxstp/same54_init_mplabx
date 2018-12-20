@@ -29,21 +29,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "print.h"
 #include "my_init/uart.h"
 
-
-UART2_DATA *pUart;
-
 /**
  * callback for printf to redirect the stdio output 
  */
 
 void PRINT_Init(void) {
 
-    pUart = UART2_GetReference();
-
     /* set STDIO to unbuffered */
     setbuf(stdout, NULL);
     setbuf(stdin, NULL);
-    
+
 }
 
 int _read(int file, char *ptr, int len) {
@@ -53,11 +48,8 @@ int _read(int file, char *ptr, int len) {
         return -1;
     }
 
-    pUart->pRxBuffer = ptr;
-    pUart->RxLength = len;
-    UART2_read();
-    length = pUart->RxOffset;
-    
+    length = UART2_read(ptr, len);
+
     if (length < 0) {
         return -1;
     }
@@ -72,11 +64,8 @@ int _write(int file, char *ptr, int len) {
         return -1;
     }
 
-    pUart->pTxBuffer = ptr;
-    pUart->TxLength = len;
-    UART2_write();
-    length = pUart->TxOffset;
-    
+    length = UART2_write(ptr, len);
+
     if (length < 0) {
         return -1;
     }

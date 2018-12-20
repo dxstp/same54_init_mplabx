@@ -53,6 +53,7 @@ int main(void) {
     
     printf("\r\n-- SAME54 Xplained Pro boot example --\r\n");
     printf("Build "__TIME__" at "__DATE__"\r\n");
+    printf("Target device ATSAME54P20A\n\r");
     printf("OSCCTRL initialized.\r\n");
     printf("GCLK initialized.\r\n");
     printf("GPIO initialized.\r\n");

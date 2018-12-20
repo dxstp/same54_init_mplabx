@@ -32,18 +32,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define CONF_SERCOM_2_USART_BAUD_RATE_REGISTER_VAL \
     (65536 - ((65536 * 16.0f * (CONF_SERCOM_2_USART_BAUD_RATE)) / 12000000))
 
-typedef struct {
-    char *pTxBuffer;
-    uint32_t TxLength;
-    uint32_t TxOffset;
-    char *pRxBuffer;
-    uint32_t RxLength;
-    uint32_t RxOffset;
-} UART2_DATA;
-
-UART2_DATA *UART2_GetReference(void);
 void UART2_Init(void);
-void UART2_read(void);
-void UART2_write(void);
+int32_t UART2_read(char *ptr, int32_t length);
+int32_t UART2_write(char *ptr, int32_t length);
 
 #endif /* UART_H_ */
