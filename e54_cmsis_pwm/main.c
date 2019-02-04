@@ -64,9 +64,20 @@ int main(void) {
     PWM_Init();
     printf("PWM initialized.\r\n");
 
+    // PB04 set as Output for Debugging
+    PORT->Group[GPIO_PORTB].OUTCLR.reg = 1 << 4;
+    PORT->Group[GPIO_PORTB].PINCFG[4].reg = 0x0;
+    PORT->Group[GPIO_PORTB].DIRSET.reg = 1 << 4;
+
     while(1) {
-        if (UART2_IsDataAvailable()) {
-            printf("%c", getchar());
+        // Poll for UART RX Receive Event 
+        if ((SERCOM2->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_RXC)) {
+            // Set PB04 to High
+            PORT->Group[GPIO_PORTB].OUTSET.reg = 1 << 4;
+            // Read Byte from SERCOM and write it back
+            SERCOM2->USART.DATA.reg = SERCOM2->USART.DATA.reg;
+            // Set PB04 to Low
+            PORT->Group[GPIO_PORTB].OUTCLR.reg = 1 << 4;
         }
     }
 }

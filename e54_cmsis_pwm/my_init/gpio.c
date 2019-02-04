@@ -26,8 +26,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <sam.h>
 #include "gpio.h"
 
-
-
 /**
  * init the GPIO module to output GLCK1
  * PWM from TC7, WO0 and WO1
@@ -35,6 +33,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  */
 void GPIO_Init(void) {
 
+    // Set Board LED to On
+    PORT->Group[GPIO_PORTC].OUTCLR.reg = 1 << 18;
+    PORT->Group[GPIO_PORTC].PINCFG[18].reg = 0x0;
+    PORT->Group[GPIO_PORTC].DIRSET.reg = 1 << 18;
+    
     // set GLCK1 output
     PORT->Group[GPIO_PORTB].WRCONFIG.reg =
             PORT_WRCONFIG_PMUX(MUX_PB15M_GCLK_IO1)
