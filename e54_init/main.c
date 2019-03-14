@@ -36,7 +36,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "my_init/gpio.h"
 #include "my_init/pwm.h"
 #include "my_init/uart.h"
-#include "print.h"
+#include "utils/print.h"
 
 /** 
  * this examples is designed for the ATSAM E54 Xplained Pro board.

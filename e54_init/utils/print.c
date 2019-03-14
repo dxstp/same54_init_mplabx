@@ -30,7 +30,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <sys/stat.h>
 
 #include "print.h"
-#include "my_init/uart.h"
+#include "../my_init/uart.h"
 
 extern int errno;
 extern int _end;
