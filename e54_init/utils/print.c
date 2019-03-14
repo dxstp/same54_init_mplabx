@@ -1,26 +1,26 @@
 // DOM-IGNORE-BEGIN
-/*******************************************************************************
-Copyright (c) 2013-2014 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
- *******************************************************************************/
+/*
+    (c) 2018 Microchip Technology Inc. and its subsidiaries. 
+    
+    Subject to your compliance with these terms, you may use Microchip software and any 
+    derivatives exclusively with Microchip products. It is your responsibility to comply with third party 
+    license terms applicable to your use of third party software (including open source software) that 
+    may accompany Microchip software.
+    
+    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY 
+    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS 
+    FOR A PARTICULAR PURPOSE.
+    
+    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP 
+    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO 
+    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL 
+    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
+    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
+    SOFTWARE.
+ */
 // DOM-IGNORE-END
 
 #include <stdio.h>
@@ -29,138 +29,145 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include "../my_init/sercom.h"
 #include "print.h"
-#include "../my_init/uart.h"
+
 
 extern int errno;
 extern int _end;
 
 /**
- * callback for printf to redirect the stdio output 
+ * redirect the stdio output for printf
  */
-
-void PRINT_Init(void) {
-
-    /* set STDIO to unbuffered */
-    setbuf(stdout, NULL);
-    setbuf(stdin, NULL);
-
+void print_init(void) {
+	/* set STDIO to unbuffered */
+	setbuf(stdout, NULL);
+	setbuf(stdin, NULL);
 }
 
 int _read(int file, char *ptr, int len) {
-    int length = 0;
+	int n = 0;
 
-    if (file != 0) {
-        return -1;
-    }
+	if (file != 0) {
+		return -1;
+	}
 
-    length = UART2_read(ptr, len);
+	n = SERCOM2_read((char *)ptr, len);
+	if (n < 0) {
+		return -1;
+	}
 
-    if (length < 0) {
-        return -1;
-    }
-
-    return length;
+	return n;
 }
 
 int _write(int file, char *ptr, int len) {
-    int length = 0;
+	int n = 0;
 
-    if ((file != 1) && (file != 2) && (file != 3)) {
-        return -1;
-    }
+	if ((file != 1) && (file != 2) && (file != 3)) {
+		return -1;
+	}
 
-    length = UART2_write(ptr, len);
+	n = SERCOM2_write((const char *)ptr, len);
+	if (n < 0) {
+		return -1;
+	}
 
-    if (length < 0) {
-        return -1;
-    }
-
-    return length;
+	return n;
 }
+
 
 /**
  * \brief Replacement of C library of _sbrk
  */
-caddr_t _sbrk(int incr) {
-    static unsigned char *heap = NULL;
-    unsigned char * prev_heap;
+caddr_t _sbrk(int incr)
+{
+	static unsigned char *heap = NULL;
+	unsigned char *       prev_heap;
 
-    if (heap == NULL) {
-        heap = (unsigned char *) &_end;
-    }
-    prev_heap = heap;
+	if (heap == NULL) {
+		heap = (unsigned char *)&_end;
+	}
+	prev_heap = heap;
 
-    heap += incr;
+	heap += incr;
 
-    return (caddr_t) prev_heap;
+	return (caddr_t)prev_heap;
 }
 
 /**
  * \brief Replacement of C library of link
  */
-int link(char *old, char *_new) {
-    (void) old, (void) _new;
-    return -1;
+int link(char *old, char *_new)
+{
+	(void)old, (void)_new;
+	return -1;
 }
 
 /**
  * \brief Replacement of C library of _close
  */
-int _close(int file) {
-    (void) file;
-    return -1;
+int _close(int file)
+{
+	(void)file;
+	return -1;
 }
 
 /**
  * \brief Replacement of C library of _fstat
  */
-int _fstat(int file, struct stat *st) {
-    (void) file;
-    st->st_mode = S_IFCHR;
+int _fstat(int file, struct stat *st)
+{
+	(void)file;
+	st->st_mode = S_IFCHR;
 
-    return 0;
+	return 0;
 }
 
 /**
  * \brief Replacement of C library of _isatty
  */
-int _isatty(int file) {
-    (void) file;
-    return 1;
+int _isatty(int file)
+{
+	(void)file;
+	return 1;
 }
 
 /**
  * \brief Replacement of C library of _lseek
  */
-int _lseek(int file, int ptr, int dir) {
-    (void) file, (void) ptr, (void) dir;
-    return 0;
+int _lseek(int file, int ptr, int dir)
+{
+	(void)file, (void)ptr, (void)dir;
+	return 0;
 }
 
 /**
  * \brief Replacement of C library of _exit
  */
-void _exit(int status) {
-    printf("Exiting with status %d.\n", status);
+void _exit(int status)
+{
+	printf("Exiting with status %d.\n", status);
 
-    for (;;)
-        ;
+	for (;;)
+		;
 }
 
 /**
  * \brief Replacement of C library of _kill
  */
-void _kill(int pid, int sig) {
-    (void) pid, (void) sig;
-    return;
+void _kill(int pid, int sig)
+{
+	(void)pid, (void)sig;
+	return;
 }
 
 /**
  * \brief Replacement of C library of _getpid
  */
-int _getpid(void) {
-    return -1;
+int _getpid(void)
+{
+	return -1;
 }
+
 
 

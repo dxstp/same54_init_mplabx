@@ -39,6 +39,8 @@ MEMORY
   ram      (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00040000
   bkupram  (rwx) : ORIGIN = 0x47000000, LENGTH = 0x00002000
   qspi     (rwx) : ORIGIN = 0x04000000, LENGTH = 0x01000000
+  userrow  (rw)  : ORIGIN = 0x00804000, LENGTH = 0x00000020
+  userpage (rw)  : ORIGIN = 0x00804020, LENGTH = 0x000001E0
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
@@ -77,6 +79,8 @@ SECTIONS
         KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
         KEEP (*(SORT(.ctors.*)))
         KEEP (*crtend.o(.ctors))
+		KEEP (*crtbegin.o(*))
+		KEEP (*crtend.o(*))
 
         . = ALIGN(4);
         KEEP(*(.fini))
@@ -160,4 +164,14 @@ SECTIONS
 
     . = ALIGN(4);
     _end = . ;
+
+	/* User row section */
+    .userRowBlock :{
+        KEEP(*(.userrow))
+    } > userrow
+
+	/* User page section */
+    .userpageBlock :{
+        KEEP(*(.userpage))
+    } > userpage
 }

@@ -23,12 +23,11 @@
  */
 // DOM-IGNORE-END
 
+#ifndef ADC_H_
+#define ADC_H_
 
-#ifndef PWM_H_
-#define PWM_H_
-
-void PWM_init(void);
-
+void ADC_init(void);
 
 
-#endif /* PWM_H_ */
+
+#endif /* ADC_H_ */

@@ -25,34 +25,26 @@
 
 #include <xc.h>
 #include <stdio.h>
-#include "pwm.h"
+#include "irqs.h"
 
-/** 
- * init the PWM module to generate two 16-bit PWMs
- */
-void PWM_init(void) {
-	MCLK_REGS->MCLK_APBDMASK |= MCLK_APBDMASK_TC7(1);
-	printf("PWM     -- unmask TC7 to enable interface on APBD.\r\n");
-
-	GCLK_REGS->GCLK_PCHCTRL[39] = GCLK_PCHCTRL_GEN_GCLK2 | GCLK_PCHCTRL_CHEN(1);
-	printf("PWM     -- connect GLCK2 to TC7.\r\n");
+void IRQ_init(void) {
+	NVIC_SetPriority(RTC_IRQn, 3);
+	printf("IRQ     -- set RTC_IRQ to priority 3.\r\n");
+	NVIC_EnableIRQ(RTC_IRQn);
+	printf("IRQ     -- enable RTC_IRQ.\r\n");
 	
-	// do a software reset of the module (write-synchronized)
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_SWRST(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- issue a software reset.\r\n");
+	NVIC_SetPriority(ADC1_OTHER_IRQn, 3);
+	printf("IRQ     -- set ADC1_0_IRQ to priority 3.\r\n");
+	NVIC_EnableIRQ(ADC1_OTHER_IRQn);
+	printf("IRQ     -- enable ADC1_0_IRQ.\r\n");
 	
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE(TC_CTRLA_MODE_COUNT16_Val);
-	TC7_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_NPWM_Val;
-	printf("PWM     -- set mode to normal PWM in 16-bit counter mode.\r\n");
+	NVIC_SetPriority(ADC1_RESRDY_IRQn, 3);
+	printf("IRQ     -- set ADC1_1_IRQ to priority 3.\r\n");
+	NVIC_EnableIRQ(ADC1_RESRDY_IRQn);
+	printf("IRQ     -- enable ADC1_1_IRQ.\r\n");
 	
-	TC7_REGS->COUNT16.TC_CC[0] = 32767;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk);
-	TC7_REGS->COUNT16.TC_CC[1] = 10000;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk);
-	printf("PWM     -- set initial duty cycles for CC0 and CC1.\r\n");
-	
-	TC7_REGS->COUNT16.TC_CTRLA |= TC_CTRLA_ENABLE(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- enable TC7 module.\r\n");
+	NVIC_SetPriority(AC_IRQn, 3);
+	printf("IRQ     -- set AC_IRQ to priority 3.\r\n");
+	NVIC_EnableIRQ(AC_IRQn);
+	printf("IRQ     -- enable AC_IRQ.\r\n");
 }

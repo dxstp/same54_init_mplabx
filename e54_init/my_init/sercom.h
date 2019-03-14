@@ -24,11 +24,19 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
+#ifndef SERCOM_H_
+#define SERCOM_H_
 
-void PWM_init(void);
+#define CONF_SERCOM_2_USART_BAUD_RATE 115200
+
+#define CONF_SERCOM_2_USART_BAUD_RATE_REGISTER_VAL \
+	(65536 - ((65536 * 16.0f * (CONF_SERCOM_2_USART_BAUD_RATE)) / 12000000))
+
+void SERCOM2_init(void);
+
+int32_t SERCOM2_read(char *const buf, const uint32_t length);
+int32_t SERCOM2_write(const char *const buf, const uint32_t length);
+int32_t SERCOM2_IsDataAvailable(void);
 
 
-
-#endif /* PWM_H_ */
+#endif /* SERCOM_H_ */

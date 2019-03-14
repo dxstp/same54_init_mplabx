@@ -24,11 +24,11 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
+#ifndef AC_H_
+#define AC_H_
 
-void PWM_init(void);
+void AC_init(void);
 
 
 
-#endif /* PWM_H_ */
+#endif /* AC_H_ */

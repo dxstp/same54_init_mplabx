@@ -25,34 +25,23 @@
 
 #include <xc.h>
 #include <stdio.h>
-#include "pwm.h"
+#include "evsys.h"
 
-/** 
- * init the PWM module to generate two 16-bit PWMs
- */
-void PWM_init(void) {
-	MCLK_REGS->MCLK_APBDMASK |= MCLK_APBDMASK_TC7(1);
-	printf("PWM     -- unmask TC7 to enable interface on APBD.\r\n");
-
-	GCLK_REGS->GCLK_PCHCTRL[39] = GCLK_PCHCTRL_GEN_GCLK2 | GCLK_PCHCTRL_CHEN(1);
-	printf("PWM     -- connect GLCK2 to TC7.\r\n");
+void EVSYS_init(void) {
+	MCLK_REGS->MCLK_APBBMASK |= MCLK_APBBMASK_EVSYS(1);
 	
-	// do a software reset of the module (write-synchronized)
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_SWRST(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- issue a software reset.\r\n");
+	GCLK_REGS->GCLK_PCHCTRL[11] = GCLK_PCHCTRL_GEN_GCLK0 | GCLK_PCHCTRL_CHEN(1);
 	
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE(TC_CTRLA_MODE_COUNT16_Val);
-	TC7_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_NPWM_Val;
-	printf("PWM     -- set mode to normal PWM in 16-bit counter mode.\r\n");
+	EVSYS_REGS->EVSYS_CTRLA = EVSYS_CTRLA_SWRST(1);
 	
-	TC7_REGS->COUNT16.TC_CC[0] = 32767;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk);
-	TC7_REGS->COUNT16.TC_CC[1] = 10000;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk);
-	printf("PWM     -- set initial duty cycles for CC0 and CC1.\r\n");
+	EVSYS_REGS->EVSYS_USER[57] = 0x01; // channel 0: ADC1 start conversion
+	EVSYS_REGS->EVSYS_USER[59] = 0x01; // channel 0: AC0 start compare
 	
-	TC7_REGS->COUNT16.TC_CTRLA |= TC_CTRLA_ENABLE(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- enable TC7 module.\r\n");
+	EVSYS_REGS->CHANNEL[0].EVSYS_CHANNEL =
+		  EVSYS_CHANNEL_EDGSEL_NO_EVT_OUTPUT
+		| EVSYS_CHANNEL_ONDEMAND(1)
+		| EVSYS_CHANNEL_RUNSTDBY(1)
+		| EVSYS_CHANNEL_PATH_ASYNCHRONOUS
+		| EVSYS_CHANNEL_EVGEN(0x0c); // RTC COMP0
+	
 }

@@ -10,10 +10,21 @@
         <itemPath>e54_init/my_init/gpio.h</itemPath>
         <itemPath>e54_init/my_init/oscctrl.h</itemPath>
         <itemPath>e54_init/my_init/pwm.h</itemPath>
-        <itemPath>e54_init/my_init/uart.h</itemPath>
+        <itemPath>e54_init/my_init/ac.h</itemPath>
+        <itemPath>e54_init/my_init/adc.h</itemPath>
+        <itemPath>e54_init/my_init/ccl.h</itemPath>
+        <itemPath>e54_init/my_init/dac.h</itemPath>
+        <itemPath>e54_init/my_init/evsys.h</itemPath>
+        <itemPath>e54_init/my_init/irqs.h</itemPath>
+        <itemPath>e54_init/my_init/mclk.h</itemPath>
+        <itemPath>e54_init/my_init/pm.h</itemPath>
+        <itemPath>e54_init/my_init/rtc.h</itemPath>
+        <itemPath>e54_init/my_init/sercom.h</itemPath>
+        <itemPath>e54_init/my_init/supc.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="utils" projectFiles="true">
         <itemPath>e54_init/utils/print.h</itemPath>
+        <itemPath>e54_init/utils/delay.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -31,8 +42,7 @@
       <logicalFolder name="Device_Startup"
                      displayName="Device_Startup"
                      projectFiles="true">
-        <itemPath>e54_init/Device_Startup/startup_same54.c</itemPath>
-        <itemPath>e54_init/Device_Startup/system_same54.c</itemPath>
+        <itemPath>e54_init/Device_Startup/nvm_userrow.c</itemPath>
       </logicalFolder>
       <logicalFolder name="my_init" displayName="my_init" projectFiles="true">
         <itemPath>e54_init/my_init/dpll.c</itemPath>
@@ -40,10 +50,21 @@
         <itemPath>e54_init/my_init/gpio.c</itemPath>
         <itemPath>e54_init/my_init/oscctrl.c</itemPath>
         <itemPath>e54_init/my_init/pwm.c</itemPath>
-        <itemPath>e54_init/my_init/uart.c</itemPath>
+        <itemPath>e54_init/my_init/ac.c</itemPath>
+        <itemPath>e54_init/my_init/adc.c</itemPath>
+        <itemPath>e54_init/my_init/ccl.c</itemPath>
+        <itemPath>e54_init/my_init/dac.c</itemPath>
+        <itemPath>e54_init/my_init/evsys.c</itemPath>
+        <itemPath>e54_init/my_init/irqs.c</itemPath>
+        <itemPath>e54_init/my_init/mclk.c</itemPath>
+        <itemPath>e54_init/my_init/pm.c</itemPath>
+        <itemPath>e54_init/my_init/rtc.c</itemPath>
+        <itemPath>e54_init/my_init/sercom.c</itemPath>
+        <itemPath>e54_init/my_init/supc.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="utils" projectFiles="true">
         <itemPath>e54_init/utils/print.c</itemPath>
+        <itemPath>e54_init/utils/delay.c</itemPath>
       </logicalFolder>
       <itemPath>e54_init/main.c</itemPath>
     </logicalFolder>
@@ -65,8 +86,8 @@
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
-        <languageToolchain>ARM</languageToolchain>
-        <languageToolchainVersion>6.3.1</languageToolchainVersion>
+        <languageToolchain>XC32</languageToolchain>
+        <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -195,6 +216,135 @@
         <property key="sram-segment" value=""/>
         <property key="unsafe-math" value="false"/>
       </ARM-LD>
+      <C32>
+        <property key="additional-warnings" value="false"/>
+        <property key="addresss-attribute-use" value="false"/>
+        <property key="enable-app-io" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="exclude-floating-point" value="false"/>
+        <property key="extra-include-directories" value=""/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="isolate-each-function" value="false"/>
+        <property key="make-warnings-into-errors" value="false"/>
+        <property key="optimization-level" value=""/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="strict-ansi" value="false"/>
+        <property key="support-ansi" value="false"/>
+        <property key="toplevel-reordering" value=""/>
+        <property key="unaligned-access" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="use-indirect-calls" value="false"/>
+      </C32>
+      <C32-AR>
+        <property key="additional-options-chop-files" value="false"/>
+      </C32-AR>
+      <C32-AS>
+        <property key="assembler-symbols" value=""/>
+        <property key="enable-symbols" value="true"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="expand-macros" value="false"/>
+        <property key="extra-include-directories-for-assembler" value=""/>
+        <property key="extra-include-directories-for-preprocessor" value=""/>
+        <property key="false-conditionals" value="false"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="keep-locals" value="false"/>
+        <property key="list-assembly" value="false"/>
+        <property key="list-source" value="false"/>
+        <property key="list-symbols" value="false"/>
+        <property key="oXC32asm-list-to-file" value="false"/>
+        <property key="omit-debug-dirs" value="false"/>
+        <property key="omit-forms" value="false"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="warning-level" value=""/>
+      </C32-AS>
+      <C32-LD>
+        <property key="additional-options-use-response-files" value="false"/>
+        <property key="additional-options-write-sla" value="false"/>
+        <property key="allocate-dinit" value="false"/>
+        <property key="code-dinit" value="false"/>
+        <property key="ebase-addr" value=""/>
+        <property key="enable-check-sections" value="false"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="exclude-standard-libraries" value="false"/>
+        <property key="extra-lib-directories" value=""/>
+        <property key="fill-flash-options-addr" value=""/>
+        <property key="fill-flash-options-const" value=""/>
+        <property key="fill-flash-options-how" value="0"/>
+        <property key="fill-flash-options-inc-const" value="1"/>
+        <property key="fill-flash-options-increment" value=""/>
+        <property key="fill-flash-options-seq" value=""/>
+        <property key="fill-flash-options-what" value="0"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-cross-reference-file" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="heap-size" value=""/>
+        <property key="input-libraries" value=""/>
+        <property key="kseg-length" value=""/>
+        <property key="kseg-origin" value=""/>
+        <property key="linker-symbols" value=""/>
+        <property key="map-file" value="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"/>
+        <property key="no-device-startup-code" value="false"/>
+        <property key="no-startup-files" value="false"/>
+        <property key="oXC32ld-extra-opts" value=""/>
+        <property key="optimization-level" value=""/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="remove-unused-sections" value="false"/>
+        <property key="report-memory-usage" value="false"/>
+        <property key="serial-length" value=""/>
+        <property key="serial-origin" value=""/>
+        <property key="stack-size" value=""/>
+        <property key="symbol-stripping" value=""/>
+        <property key="trace-symbols" value=""/>
+        <property key="warn-section-align" value="false"/>
+      </C32-LD>
+      <C32CPP>
+        <property key="additional-warnings" value="false"/>
+        <property key="addresss-attribute-use" value="false"/>
+        <property key="check-new" value="false"/>
+        <property key="eh-specs" value="true"/>
+        <property key="enable-app-io" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="exceptions" value="true"/>
+        <property key="exclude-floating-point" value="false"/>
+        <property key="extra-include-directories" value=""/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="isolate-each-function" value="false"/>
+        <property key="make-warnings-into-errors" value="false"/>
+        <property key="optimization-level" value=""/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="rtti" value="true"/>
+        <property key="strict-ansi" value="false"/>
+        <property key="toplevel-reordering" value=""/>
+        <property key="unaligned-access" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="use-indirect-calls" value="false"/>
+      </C32CPP>
+      <C32Global>
+        <property key="common-include-directories" value=""/>
+        <property key="gp-relative-option" value=""/>
+        <property key="legacy-libc" value="false"/>
+        <property key="mdtcm" value=""/>
+        <property key="mitcm" value=""/>
+        <property key="mstacktcm" value="false"/>
+        <property key="relaxed-math" value="false"/>
+        <property key="save-temps" value="false"/>
+        <property key="wpo-lto" value="false"/>
+      </C32Global>
       <ICD4Tool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>

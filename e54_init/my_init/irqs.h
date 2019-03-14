@@ -24,11 +24,11 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
+#ifndef IRQS_H_
+#define IRQS_H_
 
-void PWM_init(void);
+void IRQ_init(void);
 
 
 
-#endif /* PWM_H_ */
+#endif /* IRQS_H_ */

@@ -24,11 +24,11 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
-
-void PWM_init(void);
+#ifndef RTC_H_
+#define RTC_H_
 
 
+void RTC_init(void);
 
-#endif /* PWM_H_ */
+
+#endif /* RTC_H_ */

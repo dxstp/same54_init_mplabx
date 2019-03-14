@@ -24,11 +24,11 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
+#ifndef CCL_H_
+#define CCL_H_
 
-void PWM_init(void);
+void CCL_init(void);
 
 
 
-#endif /* PWM_H_ */
+#endif /* CCL_H_ */

@@ -24,35 +24,39 @@
 // DOM-IGNORE-END
 
 #include <xc.h>
+#include <stdint.h>
 #include <stdio.h>
-#include "pwm.h"
+#include "rtc.h"
 
 /** 
- * init the PWM module to generate two 16-bit PWMs
+ * init the RTC module to generate an interrupt every 1s.
  */
-void PWM_init(void) {
-	MCLK_REGS->MCLK_APBDMASK |= MCLK_APBDMASK_TC7(1);
-	printf("PWM     -- unmask TC7 to enable interface on APBD.\r\n");
+void RTC_init(void) {
 
-	GCLK_REGS->GCLK_PCHCTRL[39] = GCLK_PCHCTRL_GEN_GCLK2 | GCLK_PCHCTRL_CHEN(1);
-	printf("PWM     -- connect GLCK2 to TC7.\r\n");
+	OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL_ULP32K;
+	printf("OSC32K  -- select internal 32kHz oscillator as source.\r\n");
 	
-	// do a software reset of the module (write-synchronized)
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_SWRST(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- issue a software reset.\r\n");
+	RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_SWRST(1);
+	while(RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_SWRST_Msk);
+	while(RTC_REGS->MODE0.RTC_CTRLA & RTC_MODE0_CTRLA_SWRST_Msk);
+	printf("RTC     -- software reset.\r\n");
 	
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE(TC_CTRLA_MODE_COUNT16_Val);
-	TC7_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_NPWM_Val;
-	printf("PWM     -- set mode to normal PWM in 16-bit counter mode.\r\n");
+	RTC_REGS->MODE0.RTC_CTRLA = 
+		  RTC_MODE0_CTRLA_COUNTSYNC(1)
+		| RTC_MODE0_CTRLA_PRESCALER_DIV1
+		| RTC_MODE0_CTRLA_MATCHCLR(1);
+	while(RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk);
+	printf("RTC     -- enable read synchronization for count register.\r\n");
+	printf("RTC     -- set divider to 1.\r\n");
+	printf("RTC     -- enable clear on match.\r\n");
 	
-	TC7_REGS->COUNT16.TC_CC[0] = 32767;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk);
-	TC7_REGS->COUNT16.TC_CC[1] = 10000;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk);
-	printf("PWM     -- set initial duty cycles for CC0 and CC1.\r\n");
+	RTC_REGS->MODE0.RTC_EVCTRL = RTC_MODE0_EVCTRL_CMPEO0(1);
+	printf("RTC     -- enable event CMP0, will generate event on match.\r\n");
 	
-	TC7_REGS->COUNT16.TC_CTRLA |= TC_CTRLA_ENABLE(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- enable TC7 module.\r\n");
+	RTC_REGS->MODE0.RTC_COMP[0] = 32768;
+	printf("RTC     -- set compare value to 32768.\r\n");
+		
+	RTC_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_ENABLE(1);
+	while(RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk);
+	printf("RTC     -- enable RTC.\r\n");
 }

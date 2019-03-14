@@ -24,11 +24,11 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
+#ifndef EVSYS_H_
+#define EVSYS_H_
 
-void PWM_init(void);
+void EVSYS_init(void);
 
 
 
-#endif /* PWM_H_ */
+#endif /* EVSYS_H_ */

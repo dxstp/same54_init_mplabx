@@ -23,12 +23,13 @@
  */
 // DOM-IGNORE-END
 
-
-#ifndef PWM_H_
-#define PWM_H_
-
-void PWM_init(void);
+#ifndef DELAY_H_
+#define DELAY_H_
 
 
+#define CONF_CPU_FREQUENCY 12000000
 
-#endif /* PWM_H_ */
+void delay_ms(const uint16_t ms);
+void delay_cycles(const uint32_t cycles);
+
+#endif /* DELAY_H_ */

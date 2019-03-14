@@ -24,11 +24,11 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
+#ifndef SUPC_H_
+#define SUPC_H_
 
-void PWM_init(void);
+void SUPC_init(void);
 
 
 
-#endif /* PWM_H_ */
+#endif /* SUPC_H_ */

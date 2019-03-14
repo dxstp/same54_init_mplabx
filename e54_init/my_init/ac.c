@@ -24,35 +24,37 @@
 // DOM-IGNORE-END
 
 #include <xc.h>
-#include <stdio.h>
-#include "pwm.h"
+#include "ac.h"
 
-/** 
- * init the PWM module to generate two 16-bit PWMs
- */
-void PWM_init(void) {
-	MCLK_REGS->MCLK_APBDMASK |= MCLK_APBDMASK_TC7(1);
-	printf("PWM     -- unmask TC7 to enable interface on APBD.\r\n");
-
-	GCLK_REGS->GCLK_PCHCTRL[39] = GCLK_PCHCTRL_GEN_GCLK2 | GCLK_PCHCTRL_CHEN(1);
-	printf("PWM     -- connect GLCK2 to TC7.\r\n");
+void AC_init(void) {
+	MCLK_REGS->MCLK_APBCMASK |= MCLK_APBCMASK_AC(1);
+    GCLK_REGS->GCLK_PCHCTRL[32] =
+          GCLK_PCHCTRL_GEN_GCLK3
+		| GCLK_PCHCTRL_CHEN(1);      
+    	
+	AC_REGS->AC_CTRLA |= AC_CTRLA_SWRST(1);
+    while(AC_REGS->AC_CTRLA & AC_SYNCBUSY_SWRST_Msk);
 	
-	// do a software reset of the module (write-synchronized)
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_SWRST(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- issue a software reset.\r\n");
+	AC_REGS->AC_SCALER[0] = 0x1f;
+    
+	AC_REGS->AC_CALIB = AC_CALIB_BIAS0(*(uint32_t *)SW0_ADDR & 0x00000003);
 	
-	TC7_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE(TC_CTRLA_MODE_COUNT16_Val);
-	TC7_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_NPWM_Val;
-	printf("PWM     -- set mode to normal PWM in 16-bit counter mode.\r\n");
+    AC_REGS->AC_COMPCTRL[0] =
+		    AC_COMPCTRL_OUT_OFF
+		  | AC_COMPCTRL_FLEN_OFF
+		  | AC_COMPCTRL_HYST_HYST50
+		  | AC_COMPCTRL_SPEED_HIGH
+		  | AC_COMPCTRL_MUXNEG_PIN2
+		  | AC_COMPCTRL_MUXPOS_VSCALE
+		  | AC_COMPCTRL_RUNSTDBY(1)
+		  | AC_COMPCTRL_SINGLE(1)
+		  | AC_COMPCTRL_ENABLE(1);
+	while(AC_REGS->AC_SYNCBUSY & AC_SYNCBUSY_COMPCTRL0_Msk);
 	
-	TC7_REGS->COUNT16.TC_CC[0] = 32767;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk);
-	TC7_REGS->COUNT16.TC_CC[1] = 10000;
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk);
-	printf("PWM     -- set initial duty cycles for CC0 and CC1.\r\n");
+    AC_REGS->AC_EVCTRL |= (1 << AC_EVCTRL_COMPEI0_Pos);
 	
-	TC7_REGS->COUNT16.TC_CTRLA |= TC_CTRLA_ENABLE(1);
-	while (TC7_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk);
-	printf("PWM     -- enable TC7 module.\r\n");
+    AC_REGS->AC_INTENSET = (1 << AC_INTENSET_COMP0_Pos);
+	
+    AC_REGS->AC_CTRLA |= AC_CTRLA_ENABLE(1);
+	while(AC_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk);
 }

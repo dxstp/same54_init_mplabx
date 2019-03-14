@@ -24,11 +24,12 @@
 // DOM-IGNORE-END
 
 
-#ifndef PWM_H_
-#define PWM_H_
-
-void PWM_init(void);
+#ifndef DAC_H_
+#define DAC_H_
 
 
+void DAC_init(void);
 
-#endif /* PWM_H_ */
+
+
+#endif /* DAC_H_ */
