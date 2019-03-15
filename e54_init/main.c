@@ -51,7 +51,26 @@
 /** 
  * this examples is designed for the ATSAM E54 Xplained Pro board.
  */
+
+extern uint32_t _etext;
+extern uint32_t _srelocate;
+extern uint32_t _erelocate;
+
 int main(void) {
+    
+    uint32_t *pSrc, *pDest;
+
+    /* Initialize the relocate segment */
+    pSrc = &_etext;
+    pDest = &_srelocate;
+
+    if (pSrc != pDest) {
+            for (; pDest < &_erelocate;) {
+                    *pDest++ = *pSrc++;
+            }
+    }
+        
+        
 	 OSCCTRL_init();
 	 GCLK_init();
 	 SERCOM2_init();

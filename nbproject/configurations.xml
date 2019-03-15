@@ -85,14 +85,14 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
         <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
+        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -118,104 +118,6 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
-      <ARM-AR>
-        <property key="archiver-flags" value="-r"/>
-      </ARM-AR>
-      <ARM-AS>
-        <property key="announce-version" value="false"/>
-        <property key="include-paths" value=""/>
-        <property key="suppress-warnings" value="false"/>
-      </ARM-AS>
-      <ARM-AS-PRE>
-        <property key="announce-version" value="false"/>
-        <property key="include-paths" value=""/>
-        <property key="preprocessor-macros" value=""/>
-        <property key="preprocessor-macros-undefined" value=""/>
-        <property key="suppress-warnings" value="false"/>
-      </ARM-AS-PRE>
-      <ARM-CPP>
-        <property key="additional-warnings" value="true"/>
-        <property key="called-functions-located" value="true"/>
-        <property key="default-bitfield-type" value="false"/>
-        <property key="default-char-type" value="false"/>
-        <property key="disable-extra-code-exception" value="true"/>
-        <property key="disable-extra-code-generation" value="true"/>
-        <property key="extra-include-directories" value=""/>
-        <property key="extra-warnings" value="false"/>
-        <property key="fast-math" value="false"/>
-        <property key="garbage-collect-data" value="false"/>
-        <property key="garbage-collect-functions" value="false"/>
-        <property key="inhibit-all" value="false"/>
-        <property key="make-warnings-into-errors" value="false"/>
-        <property key="no-system-directories" value="false"/>
-        <property key="optimization-level" value=""/>
-        <property key="position-independent" value="false"/>
-        <property key="preprocess-only" value="false"/>
-        <property key="preprocessor-macros" value=""/>
-        <property key="preprocessor-macros-undefined" value=""/>
-        <property key="strict-ansi" value="false"/>
-        <property key="strict-ansi-errors" value="false"/>
-        <property key="syntax-only" value="false"/>
-        <property key="undefined-identifier" value="false"/>
-        <property key="unsafe-math" value="false"/>
-        <property key="use-rodata" value="false"/>
-        <property key="verbose" value="false"/>
-      </ARM-CPP>
-      <ARM-GCC>
-        <property key="additional-warnings" value="true"/>
-        <property key="called-functions-located" value="true"/>
-        <property key="default-bitfield-type" value="false"/>
-        <property key="default-char-type" value="false"/>
-        <property key="extra-include-directories" value=""/>
-        <property key="extra-warnings" value="false"/>
-        <property key="fast-math" value="false"/>
-        <property key="garbage-collect-data" value="false"/>
-        <property key="garbage-collect-functions" value="true"/>
-        <property key="inhibit-all" value="false"/>
-        <property key="make-warnings-into-errors" value="false"/>
-        <property key="no-system-directories" value="false"/>
-        <property key="optimization-level" value="-Os"/>
-        <property key="position-independent" value="false"/>
-        <property key="preprocessor-macros" value="NDEBUG"/>
-        <property key="preprocessor-macros-undefined" value=""/>
-        <property key="strict-ansi" value="false"/>
-        <property key="strict-ansi-errors" value="false"/>
-        <property key="support-ansi" value="false"/>
-        <property key="syntax-only" value="false"/>
-        <property key="undefined-identifier" value="false"/>
-        <property key="unsafe-math" value="false"/>
-        <property key="verbose" value="false"/>
-      </ARM-GCC>
-      <ARM-Global>
-        <property key="bin" value="true"/>
-        <property key="common-include-directories" value=""/>
-        <property key="eep" value="true"/>
-        <property key="hex" value="true"/>
-        <property key="lss" value="true"/>
-        <property key="omit-pack-options" value="false"/>
-        <property key="processor-mode" value="-mthumb"/>
-        <property key="srec" value="true"/>
-        <property key="user-pack-include" value=""/>
-      </ARM-Global>
-      <ARM-LD>
-        <property key="additional-specs" value=""/>
-        <property key="exclude-standard-libraries" value="false"/>
-        <property key="extra-lib-directories" value="Device_Startup"/>
-        <property key="fast-math" value="false"/>
-        <property key="flash-segment" value=""/>
-        <property key="generate-map-file" value="true"/>
-        <property key="input-libraries" value="libm"/>
-        <property key="no-default-libs" value="false"/>
-        <property key="no-shared-libraries" value="false"/>
-        <property key="no-startup-files" value="false"/>
-        <property key="omit-symbol-information" value="false"/>
-        <property key="other-options" value=""/>
-        <property key="position-independent" value="false"/>
-        <property key="remove-unused-sections" value="true"/>
-        <property key="size-optimized-library" value="false"/>
-        <property key="sram-segment" value=""/>
-        <property key="unsafe-math" value="false"/>
-      </ARM-LD>
       <C32>
         <property key="additional-warnings" value="false"/>
         <property key="addresss-attribute-use" value="false"/>
@@ -345,6 +247,32 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <EdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="2,000"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-fffff"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+      </EdbgTool>
       <ICD4Tool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
